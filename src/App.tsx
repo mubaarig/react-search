@@ -1,9 +1,12 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect } from 'react';
 import './App.css';
 import SearchContainer from './components/SearchContainer';
 
 function App() {
+
+  useEffect(()=>{
+    document.title="Typescript React Search"
+  })
   return (
     <div className="App">
       <header className="">

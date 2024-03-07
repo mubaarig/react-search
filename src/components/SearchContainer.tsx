@@ -1,3 +1,4 @@
+import React from "react";
 import { useState } from "react";
 import SearchResults from "./SearchResults";
 import Search from "./Search";
