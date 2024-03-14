@@ -8,8 +8,6 @@ interface Product {
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
-  // fakeApiSearch: (value:string) => Array
-  // fakeApiSearch: (value: string) => string; // arrow function
 }
 
 const fakeAPISearch = async (query: string): Promise<Product[]> => {
@@ -63,13 +61,7 @@ const Search: React.FC<SearchBarProps> = ({ onSearch }): JSX.Element => {
     onSearch(searchTerm);
   };
 
-  // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setSearchTerm(event.target.value);
-  // };
-  // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   onSearch(searchTerm);
-  // };
+  
   autocompleteResults.map(item => item.category)
   .filter((value, index, self) => self.indexOf(value) === index)
   return (
