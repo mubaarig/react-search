@@ -10,9 +10,10 @@ function App() {
   return (
     <div className="App">
       <header className="">
-      <h1 className="text-3xl font-bold underline">
-      <SearchContainer/>
-    </h1>
+      <div>
+      <h1>My Search App</h1>
+      <SearchContainer />
+    </div>
       </header>
     </div>
   );

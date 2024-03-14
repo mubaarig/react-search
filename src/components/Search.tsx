@@ -1,25 +1,82 @@
 import React, { useState } from "react";
 import useDebounce from "../customHooks/useDebounce";
 
-interface SearchProps {
-  onSearch: (query: string) => void;
+interface Product {
+  id: number;
+  category: string;
 }
 
-const Search: React.FC<SearchProps> = ({ onSearch }): JSX.Element => {
+interface SearchBarProps {
+  onSearch: (query: string) => void;
+  // fakeApiSearch: (value:string) => Array
+  // fakeApiSearch: (value: string) => string; // arrow function
+}
+
+const fakeAPISearch = async (query: string): Promise<Product[]> => {
+  try {
+    const response = await fetch(
+      `https://fakestoreapi.com/products?category=${query}`
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch autocomplete results");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching autocomplete results:", error);
+    return [];
+  }
+};
+const Search: React.FC<SearchBarProps> = ({ onSearch }): JSX.Element => {
   const [searchTerm, setSearchTerm] = useState<string>("");
 
+  const [autocompleteResults, setAutocompleteResults] = useState<Product[]>([]);
   //Debounce the search
   const debouncedSearch = useDebounce(searchTerm, 500);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+  const handleInputChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = event.target.value;
+    setSearchTerm(value);
+    debouncedSearch;
+    if (value.trim() === "") {
+      setAutocompleteResults([]);
+      return;
+    }
+    try {
+      const results = await fakeAPISearch(value);
+      setAutocompleteResults(results);
+    } catch (error) {
+      console.error("Error fetching autocomplete results:", error);
+    }
   };
 
+  const handleAutocompleteClick = (product: Product) => {
+    setSearchTerm(product.category);
+    setAutocompleteResults([]);
+    onSearch(product.category);
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    onSearch(searchTerm);
+  };
+
+  // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setSearchTerm(event.target.value);
+  // };
+  // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+  //   onSearch(searchTerm);
+  // };
+  autocompleteResults.map(item => item.category)
+  .filter((value, index, self) => self.indexOf(value) === index)
   return (
     <div className="max-w-3xl mx-auto">
       {/* <!--Search icon--> */}
 
-      <form className="max-w-md mx-auto mt-5">
+      <form className="max-w-md mx-auto mt-5" onSubmit={handleSubmit}>
         <label
           htmlFor="default-search"
           className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
@@ -54,9 +111,8 @@ const Search: React.FC<SearchProps> = ({ onSearch }): JSX.Element => {
                 dark:focus:ring-gray-500 dark:focus:border-gray-500"
             placeholder="Search Mockups, Logos..."
             value={searchTerm}
-            onChange={handleChange}
+            onChange={handleInputChange}
             required
-            
           />
           <button
             type="submit"
@@ -70,6 +126,16 @@ const Search: React.FC<SearchProps> = ({ onSearch }): JSX.Element => {
           </button>
         </div>
         <p className="text-left">Debounced Value: {debouncedSearch}</p>
+        <ul>
+          
+          { 
+          autocompleteResults.map((result) => (
+            <li key={result.id} onClick={() => handleAutocompleteClick(result)}>
+              <p className="bg-gray-300 border-separate"> 
+              <span className="bg-blue-400 text-white">{result.category}</span></p>
+            </li>
+          ))}
+        </ul>
       </form>
     </div>
   );
