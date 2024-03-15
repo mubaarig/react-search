@@ -31,14 +31,14 @@ const SearchResults: React.FC<SearchResultProps> = ({ query }) => {
       handleSearch(query);
     }
   }, [query]);
-  results
+  const resFiltered = results
     .map((item) => item.category)
     .filter((value, index, self) => self.indexOf(value) === index);
   return (
     <div>
       <h2>Search Results for {query}</h2>
       <ul>
-        {results.map((result) => (
+        {resFiltered.map((result) => (
           <li key={result.id}>{result.category}</li>
         ))}
       </ul>
