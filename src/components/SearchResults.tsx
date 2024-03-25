@@ -3,11 +3,14 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 
 interface SearchResultProps {
+  id: number;
+  category: string;
   query: string;
+  results: [];
 }
 
-const SearchResults: React.FC<SearchResultProps> = ({ query }) => {
-  const [results, setResults] = useState<any[]>([]); // Assuming results structure
+const SearchResults: React.FC<SearchResultProps> = ({ query}) => {
+  const [results, setResults] = useState<SearchResultProps[]>([]); // Assuming results structure
 
   useEffect(() => {
     const handleSearch = async (query: string) => {
@@ -31,14 +34,14 @@ const SearchResults: React.FC<SearchResultProps> = ({ query }) => {
       handleSearch(query);
     }
   }, [query]);
-  const resFiltered = results
-    .map((item) => item.category)
-    .filter((value, index, self) => self.indexOf(value) === index);
+  // const resFiltered = results
+  //   .map((item) => item.category)
+  //   .filter((value, index, self) => self.indexOf(value) === index);
   return (
     <div>
       <h2>Search Results for {query}</h2>
       <ul>
-        {resFiltered.map((result) => (
+        {results.map((result) => (
           <li key={result.id}>{result.category}</li>
         ))}
       </ul>

@@ -61,9 +61,10 @@ const Search: React.FC<SearchBarProps> = ({ onSearch }): JSX.Element => {
     onSearch(searchTerm);
   };
 
-  
-  autocompleteResults.map(item => item.category)
-  .filter((value, index, self) => self.indexOf(value) === index)
+
+   const autoCompletedFiltered = autocompleteResults.filter((itm,pos,self)=> (itm) === itm);
+
+   console.log(autoCompletedFiltered);
   return (
     <div className="max-w-3xl mx-auto">
       {/* <!--Search icon--> */}
@@ -121,7 +122,7 @@ const Search: React.FC<SearchBarProps> = ({ onSearch }): JSX.Element => {
         <ul>
           
           { 
-          autocompleteResults.map((result) => (
+          autoCompletedFiltered.map((result) => (
             <li key={result.id} onClick={() => handleAutocompleteClick(result)}>
               <p className="bg-gray-300 border-separate"> 
               <span className="bg-blue-400 text-white">{result.category}</span></p>
